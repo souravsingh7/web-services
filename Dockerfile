@@ -1,4 +1,4 @@
-FROM bitnami/keycloak:24
+FROM bitnami/keycloak:latest
 
 # Explicitly set binding - CRITICAL FOR RENDER
 ENV KEYCLOAK_BIND_ADDRESS=0.0.0.0
