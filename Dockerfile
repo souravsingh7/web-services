@@ -1,16 +1,15 @@
-FROM bitnami/keycloak:latest
+FROM quay.io/keycloak/keycloak:26.0.7
 
-# Explicitly set binding - CRITICAL FOR RENDER
-ENV KEYCLOAK_BIND_ADDRESS=0.0.0.0
-ENV KEYCLOAK_HTTP_PORT=10000
+# Build the Keycloak server
+RUN /opt/keycloak/bin/kc.sh build
 
-# Production mode off for easier startup
-ENV KEYCLOAK_PRODUCTION=false
-
-# Enable health endpoints so Render can verify it's running
-ENV KEYCLOAK_ENABLE_HEALTH_ENDPOINTS=true
-
-# Logging to help debug
-ENV KEYCLOAK_LOG_LEVEL=INFO
-
+# Expose port 10000 for Render
 EXPOSE 10000
+
+# Start Keycloak in development mode
+# MUST bind to 0.0.0.0 for Render to detect the port
+CMD ["/opt/keycloak/bin/kc.sh", "start-dev", \
+     "--http-enabled=true", \
+     "--http-host=0.0.0.0", \
+     "--http-port=10000", \
+     "--hostname-strict=false"]
